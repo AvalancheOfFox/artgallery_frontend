@@ -5,7 +5,10 @@ const ARTWORKS_URL = `${BASE_URL}/artworks`
 const main = document.querySelector("main")
 const form = document.querySelector("form")
 const createButton = document.querySelector("#create")
+const wednesdayButton = document.querySelector(".wednesdayButton")
 
+const allAudio = document.querySelector("audio")
+const wednesdayAudio = document.getElementById("scream")
 
 
 
@@ -15,7 +18,6 @@ function getArtworks() {
     fetch(`${ARTWORKS_URL}`).then(res => res.json())
     .then((artworkObjArr) => {
         main.innerHTML = ""
-        main.innerHTML += ""
         artworkObjArr.data.forEach(addArtworkToDOM)
     }) //end of fetch
 } // end of getArtworks
@@ -75,16 +77,34 @@ function deleteArtwork(event){
     .then((  ) => getArtworks()) //end of fetch
 }; //end of deleteArtwork
 
+
+function editArtwork(event){
+
+    console.log(event)
+    // debugger
+    //need to do some big NO animation
+}
+
+
+
+
 function buttonHandler(event) {
     if (event.target.classList.contains("delete")) {
         console.log("A delete button was clicked")
         deleteArtwork(event);
     } //doesn't auto update yet??
     else if (event.target.classList.contains("edit")) {
+        event.preventDefault()
+        allAudio.play()
         console.log("an edit button was clicked")
-        // editArtwork(event);
+        editArtwork(event);
     }
+   
 }//end of button handler
+
+
+//EVENT LISTENERS 
+
 
 document.addEventListener("DOMContentLoaded", (e) => {
     getArtworks()
@@ -94,9 +114,18 @@ main.addEventListener('click', buttonHandler);
 //listens for button clicks on artwork divs
 
 createButton.addEventListener('click', (event) => {
-    form.classList = "visible"
-    console.log("a create button was clicked")
-}) //reveals the form when Create button is clicked
+    createButton.classList = "hidden"
+    wednesdayButton.classList = "hidden"
+        form.classList = "visible"
+    console.log(event, "a create button was clicked")
+}) //reveals the form when Create button is clicked and hides
+form.addEventListener('click', ()=>{
+    form.classList = "hidden"
+    createButton.classList = ""
+    createButton.classList += "create"
+    wednesdayButton.classList = ""
+    wednesdayButton.classList = "wednesdayButton"
+})
 
 form.addEventListener('submit', (event) =>{
     event.preventDefault()
@@ -104,4 +133,14 @@ form.addEventListener('submit', (event) =>{
     addArtworkToDB(event);
     form.reset()
     form.classList = "hidden"
+    createButton.classList = ""
+    createButton.classList += "create"
+    wednesdayButton.classList = ""
+    wednesdayButton.classList = "wednesdayButton"
+})//submits and triggers db creation as well as resting the form and hiding it
+
+
+wednesdayButton.addEventListener("click", (e) => {
+    e.preventDefault()
+    wednesdayAudio.play()
 })
